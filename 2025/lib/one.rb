@@ -6,11 +6,9 @@ module TwentyFive
       TwentyFive::FetchInput
         .call(1)
         .split("\n")
-        .reduce(0) do |acc, instruction|
-          acc += 1 if dial.turn(instruction).zero?
+        .each { |instruction| dial.turn(instruction) }
 
-          acc
-        end
+      dial.times_clicked_zero
     end
   end
 end
@@ -28,7 +26,7 @@ class Node
 end
 
 class Dial
-  attr_accessor :current, :dll
+  attr_accessor :current, :dll, :times_clicked_zero
 
   def initialize
     nodes = (0..99).map { |i| Node.new(i) }
@@ -47,6 +45,7 @@ class Dial
 
     @dll = nodes
     @current = nodes[50]
+    @times_clicked_zero = 0
   end
 
   def turn(instruction)
@@ -65,9 +64,11 @@ class Dial
 
   def left
     @current = @current.prev
+    @times_clicked_zero += 1 if @current.value.zero?
   end
 
   def right
     @current = @current.next
+    @times_clicked_zero += 1 if @current.value.zero?
   end
 end
