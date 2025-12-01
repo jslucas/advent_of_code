@@ -10,6 +10,7 @@ module TwentyFive
 
       request = Net::HTTP::Get.new(uri)
       request['Cookie'] = "session=#{session}"
+      request['User-Agent'] = 'jspencerlucas@gmail.com'
 
       response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
         http.request(request)
