@@ -1,5 +1,6 @@
 require 'net/http'
 require 'uri'
+require 'openssl'
 
 module TwentyFive
   module FetchInput
@@ -12,7 +13,12 @@ module TwentyFive
       request['Cookie'] = "session=#{session}"
       request['User-Agent'] = 'jspencerlucas@gmail.com'
 
-      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+      response = Net::HTTP.start(
+        uri.hostname,
+        uri.port,
+        use_ssl: true,
+        verify_mode: OpenSSL::SSL::VERIFY_NONE
+      ) do |http|
         http.request(request)
       end
 
