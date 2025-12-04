@@ -1,33 +1,23 @@
+require 'pry-byebug'
+
 module TwentyFive
   module Three
     def self.solve(test = true)
       input = test ? test_input : FetchInput.call(3)
 
-      input.split("\n").sum do |bank|
-        length = bank.length
-        l = 0
-        r = 0
+      input.split("\n").sum do |str|
+        bank = str.chars.map(&:to_i)
+        batteries = []
 
-        # 8 1 8 1 8 1 9 1 1 1 1 2 1 1 1
-        # l r
-        # l   r
-        #             l
-        #             l r
-        #             l         r
-        bank.each_char.with_index do |c, i|
-          n = c.ord
+        bank.each_with_index do |n, i|
+          available = bank.length - i
 
-          if n > l && i < length - 1
-            l = n
-            r = 0
-            next
-          elsif n > r
-            r = n
-            next
-          end
+          batteries.pop until batteries.empty? || (12 - batteries.length) == available || n <= batteries.last
+
+          batteries.push(n) unless batteries.length == 12
         end
 
-        (l.chr + r.chr).to_i
+        batteries.join.to_i
       end
     end
 
