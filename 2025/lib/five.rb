@@ -3,7 +3,7 @@ module TwentyFive
     def self.solve(test = true)
       input = test ? test_input : FetchInput.call(5)
 
-      merged_ranges, product_ids =
+      merged_ranges, _product_ids =
         input
         .split("\n")
         .map { |x| x.split('-').map(&:to_i) } # [[3,5], [10, 14], [], [1], [5]]
@@ -30,13 +30,7 @@ module TwentyFive
         [ranges, ids]
       end
 
-      product_ids.sum do |id|
-        if merged_ranges.any? { |range| range[0] <= id && range[1] >= id }
-          1
-        else
-          0
-        end
-      end
+      merged_ranges.sum { |min, max| (max - min) + 1 }
     end
 
     def self.test_input
